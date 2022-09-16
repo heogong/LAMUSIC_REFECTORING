@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -67,6 +69,17 @@ public class Student {
     private StudentLesson lesson;
 
     public static Student createStudent(StudentDTO.StudentReq req) {
+//        req.subscribeOn(Schedulers.boundedElastic()).subscribe(q -> {
+//            Student.builder()
+//                    .name(q.getName())
+//                    .birthDay(q.getBirthDay())
+//                    .gender(q.getGender())
+//                    .phone(q.getPhone())
+//                    .address(q.getAddress())
+//                    .description(q.getDescription())
+//                    .lesson(StudentLesson.createStudentLesson(q))
+//                    .build();
+//        });
         return Student.builder()
                 .name(req.getName())
                 .birthDay(req.getBirthDay())
