@@ -9,5 +9,4 @@ public class LamusicWebfluxApplication {
     public static void main(String[] args) {
         SpringApplication.run(LamusicWebfluxApplication.class, args);
     }
-
 }

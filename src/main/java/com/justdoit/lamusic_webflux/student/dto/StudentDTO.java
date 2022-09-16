@@ -1,15 +1,10 @@
 package com.justdoit.lamusic_webflux.student.dto;
 
-import com.justdoit.lamusic_webflux.common.UseYN;
 import com.justdoit.lamusic_webflux.lessoncourse.dto.LessonCourseDTO;
-import com.justdoit.lamusic_webflux.lessoncourse.entity.LessonCourse;
 import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDTO {
@@ -45,8 +40,16 @@ public class StudentDTO {
         private String address;
         private String description;
 
-        public static Mono<StudentResp> createStudentResp(Mono<Student> student) {
-            return new StudentResp();
+
+        public static StudentResp createStudentResp(Student student) {
+            return new StudentResp(
+                    student.getName(),
+                    student.getBirthDay(),
+                    student.getGender(),
+                    student.getPhone(),
+                    student.getAddress(),
+                    student.getDescription()
+            );
         }
     }
 }

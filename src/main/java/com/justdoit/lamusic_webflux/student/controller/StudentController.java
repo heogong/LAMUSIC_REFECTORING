@@ -16,10 +16,10 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @PostMapping("/student")
-    public void createStudent(StudentDTO.StudentReq req) {
-        studentService.createStudent(req);
-    }
+//    @PostMapping("/student")
+//    public void createStudent(StudentDTO.StudentReq req) {
+//        studentService.createStudent(req);
+//    }
 
     @GetMapping("/student/{id}")
     public Mono<StudentDTO.StudentResp> getStudent(@PathVariable Long id) {

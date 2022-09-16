@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import javax.transaction.Transactional;
 
@@ -19,15 +20,18 @@ public class StudentService {
 
     private final LessonCourseService lessonCourseService;
 
-    @Transactional
-    public Student createStudent(StudentDTO.StudentReq studentReq) {
-        Student student = studentRepository.save(Student.createStudent(studentReq));
-        lessonCourseService.createLessonCourse(student, studentReq);
-        return student;
-    }
+//    @Transactional
+//    public Student createStudent(StudentDTO.StudentReq studentReq) {
+//        Student student = studentRepository.save(Student.createStudent(studentReq));
+//        lessonCourseService.createLessonCourse(student, studentReq);
+//        return student;
+//    }
 
     @Transactional
     public Mono<StudentDTO.StudentResp> getStudent(Long id) {
-        return StudentDTO.StudentResp.createStudentResp(studentRepository.findById(id));
+        return studentRepository.findById(id).flatMap(student ->
+                Mono.just(StudentDTO.StudentResp.createStudentResp(student))
+                        .subscribeOn(Schedulers.boundedElastic())
+        );
     }
 }
