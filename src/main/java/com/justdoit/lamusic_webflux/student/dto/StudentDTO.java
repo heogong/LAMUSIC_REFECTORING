@@ -1,11 +1,9 @@
 package com.justdoit.lamusic_webflux.student.dto;
 
-import com.justdoit.lamusic_webflux.lessoncourse.dto.LessonCourseDTO;
-import com.justdoit.lamusic_webflux.lessoncourse.entity.LessonCourse;
+import com.justdoit.lamusic_webflux.student.entity.StudentLessonCourse;
 import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class StudentDTO {
         private int lessonWeek;
 
         // 수업정보
-        List<LessonCourseDTO.LessonCourseReq> lessonCourseReqs;
+        List<StudentLessonCourseDTO.LessonCourseReq> lessonCourseReqs;
     }
 
     @AllArgsConstructor
@@ -41,7 +39,7 @@ public class StudentDTO {
         private String phone;
         private String address;
         private String description;
-        private List<LessonCourse> lessonCourses;
+        private List<StudentLessonCourse> lessonCourses;
 
 
         public static StudentResp createStudentResp(Student student) {

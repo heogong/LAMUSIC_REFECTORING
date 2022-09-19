@@ -1,9 +1,9 @@
-package com.justdoit.lamusic_webflux.lessoncourse.dto;
+package com.justdoit.lamusic_webflux.student.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public class LessonCourseDTO {
+public class StudentLessonCourseDTO {
 
     @AllArgsConstructor
     @Getter

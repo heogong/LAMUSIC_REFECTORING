@@ -13,11 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Getter
-@Document
 public class StudentLesson {
-
-    @Id
-    private String id;
 
     // 수강 시작일
     private String startLessonDate;
@@ -30,12 +26,8 @@ public class StudentLesson {
     private int lessonTerm;
     private int lessonWeek;
 
-//    @OneToOne(mappedBy = "StudentLesson")
-//    private Student student;
-
     public static StudentLesson createStudentLesson(StudentDTO.StudentReq req) {
         return StudentLesson.builder()
-//                .student(student)
                 .startLessonDate(req.getStartLessonDate())
                 .endLessonDate(req.getEndLessonDate())
                 .classDates(req.getClassDates())

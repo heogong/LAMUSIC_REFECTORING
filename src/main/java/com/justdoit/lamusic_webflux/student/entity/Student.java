@@ -3,7 +3,6 @@ package com.justdoit.lamusic_webflux.student.entity;
 import com.justdoit.lamusic_webflux.common.ProcessClassType;
 import com.justdoit.lamusic_webflux.common.Status;
 import com.justdoit.lamusic_webflux.common.UseYN;
-import com.justdoit.lamusic_webflux.lessoncourse.entity.LessonCourse;
 import com.justdoit.lamusic_webflux.student.dto.StudentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,7 +47,7 @@ public class Student {
     private Date createDate;
     private Date updateDate;
 
-    private List<LessonCourse> lessonCourses = new ArrayList<>();
+    private List<StudentLessonCourse> lessonCourses = new ArrayList<>();
 
     private StudentLesson lesson;
 
@@ -63,7 +62,7 @@ public class Student {
                 .lesson(StudentLesson.createStudentLesson(req))
                 .lessonCourses(
                         req.getLessonCourseReqs().stream()
-                                .map(LessonCourse::createLessonCourse
+                                .map(StudentLessonCourse::createLessonCourse
                         ).collect(Collectors.toList())
                 )
                 .build();
