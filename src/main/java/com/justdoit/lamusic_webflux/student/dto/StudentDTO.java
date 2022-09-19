@@ -3,8 +3,10 @@ package com.justdoit.lamusic_webflux.student.dto;
 import com.justdoit.lamusic_webflux.student.entity.StudentLessonCourse;
 import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Date;
 import java.util.List;
 
 public class StudentDTO {
@@ -12,6 +14,7 @@ public class StudentDTO {
     @AllArgsConstructor
     @Getter
     public static class StudentReq {
+        private String id;
         private String name;
         private String birthDay;
         private String gender;
@@ -31,6 +34,7 @@ public class StudentDTO {
     }
 
     @AllArgsConstructor
+    @Builder
     @Getter
     public static class StudentResp {
         private String name;
@@ -40,18 +44,22 @@ public class StudentDTO {
         private String address;
         private String description;
         private List<StudentLessonCourse> lessonCourses;
+        private Date createDate;
+        private Date updateDate;
 
 
         public static StudentResp createStudentResp(Student student) {
-            return new StudentResp(
-                    student.getName(),
-                    student.getBirthDay(),
-                    student.getGender(),
-                    student.getPhone(),
-                    student.getAddress(),
-                    student.getDescription(),
-                    student.getLessonCourses()
-            );
+            return StudentResp.builder()
+                    .name(student.getName())
+                    .birthDay(student.getBirthDay())
+                    .gender(student.getGender())
+                    .phone(student.getPhone())
+                    .address(student.getAddress())
+                    .description(student.getDescription())
+                    .lessonCourses(student.getLessonCourses())
+                    .createDate(student.getCreateDate())
+                    .updateDate(student.getUpdateDate())
+                    .build();
         }
     }
 }

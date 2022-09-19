@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -28,9 +27,16 @@ public class StudentRouter {
     @Bean
     public RouterFunction<ServerResponse> studentRouterFunction () {
             return route()
-                    .GET("/student/{id}", accept(APPLICATION_JSON), this::getStudent)
                     .POST("/student", accept(APPLICATION_JSON), this::createStudent)
+                    .GET("/student/{id}", accept(APPLICATION_JSON), this::getStudent)
+                    .GET("/student", accept(APPLICATION_JSON), this::getAllStudent)
+                    .PUT("/student", accept(APPLICATION_JSON), this::updateStudent)
             .build();
+    }
+
+    public Mono<ServerResponse> createStudent(ServerRequest request) {
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(studentService.createStudent(request.bodyToMono(StudentDTO.StudentReq.class)), Student.class);
     }
 
     public Mono<ServerResponse> getStudent(ServerRequest request) {
@@ -38,8 +44,13 @@ public class StudentRouter {
                 .body(studentService.getStudent(request.pathVariable("id")), Student.class);
     }
 
-    public Mono<ServerResponse> createStudent(ServerRequest request) {
+    public Mono<ServerResponse> getAllStudent(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(studentService.createStudent(request.bodyToMono(StudentDTO.StudentReq.class)), Student.class);
+                .body(studentService.getAllStudent(), Student.class);
+    }
+
+    public Mono<ServerResponse> updateStudent(ServerRequest request) {
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(studentService.updateStudent(request.bodyToMono(StudentDTO.StudentReq.class)), Student.class);
     }
 }
