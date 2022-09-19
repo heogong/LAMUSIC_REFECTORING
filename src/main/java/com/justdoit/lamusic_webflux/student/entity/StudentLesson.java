@@ -5,22 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-@Entity
+@Document
 public class StudentLesson {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     // 수강 시작일
     private String startLessonDate;

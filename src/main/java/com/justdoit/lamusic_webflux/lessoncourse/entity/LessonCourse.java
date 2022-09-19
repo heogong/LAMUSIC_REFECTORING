@@ -6,19 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import reactor.core.publisher.Mono;
 
-import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-@Entity
+@Document
 public class LessonCourse {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     private String lessonClassName; // 선생님 이름으로 class(반) 이 나뉨
     private String courseTypeName; // 배울 악기
@@ -31,13 +32,10 @@ public class LessonCourse {
     // 수업기간(시간)
     private String lessonDuration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STUDENT_ID")
     private Student student;
 
-    public static LessonCourse createLessonCourse(Student student, LessonCourseDTO.LessonCourseReq req) {
+    public static LessonCourse createLessonCourse(LessonCourseDTO.LessonCourseReq req) {
         return LessonCourse.builder()
-                .student(student)
                 .lessonClassName(req.getLessonClassName())
                 .courseTypeName(req.getCourseTypeName())
                 .lessonDay(req.getLessonDay())

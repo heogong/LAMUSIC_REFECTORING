@@ -7,6 +7,7 @@ import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,17 +18,10 @@ public class LessonCourseService {
 
     private final LessonCourseRepository lessonCourseRepository;
 
-    public void createLessonCourse(Student student, StudentDTO.StudentReq studentReq) {
-
-
-//        studentReq.subscribe(req -> {
-//            req.getLessonCourseReqs().stream()
-//                    .map(lessonCourseReq -> LessonCourse.createLessonCourse(student, lessonCourseReq))
-//                    .collect(Collectors.toList());
-//        });
-        lessonCourseRepository.saveAll(
+    public Flux<LessonCourse> createLessonCourse(Mono<Student> student, StudentDTO.StudentReq studentReq) {
+        return lessonCourseRepository.insert(
                 studentReq.getLessonCourseReqs().stream()
-                        .map(lessonCourseReq -> LessonCourse.createLessonCourse(student, lessonCourseReq))
+                        .map(LessonCourse::createLessonCourse)
                         .collect(Collectors.toList())
         );
     }
