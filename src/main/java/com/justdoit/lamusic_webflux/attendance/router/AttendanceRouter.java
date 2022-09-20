@@ -3,7 +3,6 @@ package com.justdoit.lamusic_webflux.attendance.router;
 import com.justdoit.lamusic_webflux.attendance.dto.AttendanceDTO;
 import com.justdoit.lamusic_webflux.attendance.entity.Attendance;
 import com.justdoit.lamusic_webflux.attendance.service.AttendanceService;
-import com.justdoit.lamusic_webflux.student.dto.StudentDTO;
 import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +29,9 @@ public class AttendanceRouter {
     public RouterFunction<ServerResponse> attendanceRouterFunction () {
         return route()
                 .POST("/attendance", accept(APPLICATION_JSON), this::createAttendance)
-                .GET("/attendance/{id}", accept(APPLICATION_JSON), this::getAttendance)
+                .GET("/attendance/date/{toDate}/student/{id}", accept(APPLICATION_JSON), this::getAttendance)
                 .PATCH("/attendance/{id}", accept(APPLICATION_JSON), this::updateAttendance)
+                .PUT("/attendance/{studentId}", accept(APPLICATION_JSON), this::initAttendance)
                 .build();
     }
 
@@ -47,7 +47,10 @@ public class AttendanceRouter {
 
     public Mono<ServerResponse> getAttendance(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(attendanceService.getAttendance(request.pathVariable("id")), Student.class);
+                .body(attendanceService.getAttendance(
+                        request.pathVariable("toDate"),
+                        request.pathVariable("id")
+                ), Attendance.class);
     }
 
     public Mono<ServerResponse> updateAttendance(ServerRequest request) {
@@ -55,6 +58,11 @@ public class AttendanceRouter {
                 .body(attendanceService.updateAttendance(
                         request.pathVariable("id"),
                         request.bodyToMono(AttendanceDTO.AttendanceReq.class)
-                ), Student.class);
+                ), Attendance.class);
+    }
+
+    public Mono<ServerResponse> initAttendance(ServerRequest request) {
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(attendanceService.initAttendance(request.pathVariable("studentId")), Attendance.class);
     }
 }

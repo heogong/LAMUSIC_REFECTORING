@@ -2,6 +2,7 @@ package com.justdoit.lamusic_webflux.attendance.entity;
 
 import com.justdoit.lamusic_webflux.attendance.dto.AttendanceDTO;
 import com.justdoit.lamusic_webflux.common.AttendanceType;
+import com.justdoit.lamusic_webflux.common.UseYN;
 import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class Attendance {
 
     private String studentId;
 
+    private UseYN useYN;
+
     // TODO 입력 선생님, 수정 선생님
 
     public static Attendance createAttendance(AttendanceDTO.AttendanceReq req) {
@@ -33,6 +36,7 @@ public class Attendance {
                 .attendanceType(req.getAttendanceType())
                 .attendanceMemo(req.getAttendanceMemo())
                 .studentId(req.getStudentId())
+                .useYN(UseYN.Y)
                 .createDate(new Date())
                 .updateDate(new Date())
                 .build();
@@ -44,6 +48,11 @@ public class Attendance {
         this.attendanceMemo = req.getAttendanceMemo();
         this.updateDate = new Date();
 
+        return this;
+    }
+
+    public Attendance initAttendance() {
+        this.useYN = UseYN.N;
         return this;
     }
 }

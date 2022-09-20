@@ -52,6 +52,11 @@ public class StudentDTO {
         private String description;
         private Date createDate;
         private Date updateDate;
+
+        // 개인 레슨 정보
+        private String startLessonDate;
+
+        // TODO StudentLessonCourseDTO resp 만들어서 리턴
         private List<StudentLessonCourse> lessonCourses;
 
 
@@ -63,6 +68,7 @@ public class StudentDTO {
                     .phone(student.getPhone())
                     .address(student.getAddress())
                     .description(student.getDescription())
+                    .startLessonDate("") // TODO 확인필요
                     .lessonCourses(student.getLessonCourses())
                     .createDate(student.getCreateDate())
                     .updateDate(student.getUpdateDate())
