@@ -14,7 +14,6 @@ public class StudentDTO {
     @AllArgsConstructor
     @Getter
     public static class StudentReq {
-        private String id;
         private String name;
         private String birthDay;
         private String gender;
@@ -28,6 +27,14 @@ public class StudentDTO {
         private int classDates;
         private int lessonTerm;
         private int lessonWeek;
+
+        // 결제 정보
+        private String cashAmount;
+        private String accountAmount;
+        private String cardAmount;
+        private String cardCompanyInfo;
+        private String paymentMemo;
+        private Date accountDate;
 
         // 수업정보
         List<StudentLessonCourseDTO.LessonCourseReq> lessonCourseReqs;
@@ -43,9 +50,9 @@ public class StudentDTO {
         private String phone;
         private String address;
         private String description;
-        private List<StudentLessonCourse> lessonCourses;
         private Date createDate;
         private Date updateDate;
+        private List<StudentLessonCourse> lessonCourses;
 
 
         public static StudentResp createStudentResp(Student student) {

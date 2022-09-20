@@ -46,10 +46,9 @@ public class Student {
     private String parentPhone;
     private Date createDate;
     private Date updateDate;
-
-    private List<StudentLessonCourse> lessonCourses = new ArrayList<>();
-    private StudentLesson lesson;
+    private StudentLesson studentLesson;
     private StudentPayment studentPayment;
+    private List<StudentLessonCourse> lessonCourses = new ArrayList<>();
 
     public static Student createStudent(StudentDTO.StudentReq req) {
         return Student.builder()
@@ -59,7 +58,8 @@ public class Student {
                 .phone(req.getPhone())
                 .address(req.getAddress())
                 .description(req.getDescription())
-                .lesson(StudentLesson.createStudentLesson(req))
+                .studentLesson(StudentLesson.createStudentLesson(req))
+                .studentPayment(StudentPayment.createStudentPayment(req))
                 .lessonCourses(
                         req.getLessonCourseReqs().stream()
                                 .map(StudentLessonCourse::createLessonCourse)
@@ -71,14 +71,14 @@ public class Student {
     }
 
     public Student updateStudent(StudentDTO.StudentReq req) {
-        this.id = req.getId();
         this.name = req.getName();
         this.birthDay = req.getBirthDay();
         this.gender = req.getGender();
         this.phone = req.getPhone();
         this.address = req.getAddress();
         this.description = req.getDescription();
-        this.lesson = StudentLesson.createStudentLesson(req);
+        this.studentLesson = StudentLesson.createStudentLesson(req);
+        this.studentPayment = StudentPayment.createStudentPayment(req);
         this.lessonCourses = req.getLessonCourseReqs().stream()
                 .map(StudentLessonCourse::createLessonCourse)
                 .collect(Collectors.toList());

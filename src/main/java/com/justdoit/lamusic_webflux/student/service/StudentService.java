@@ -21,8 +21,7 @@ public class StudentService {
 
         Mono<StudentDTO.StudentResp> result = studentReq.flatMap(
                 req -> studentRepository.insert(Student.createStudent(req))
-                        .flatMap(student -> Mono.just(StudentDTO.StudentResp.createStudentResp(student))
-                )
+                        .map(StudentDTO.StudentResp::createStudentResp)
         ).log();
 
         log.info("## end :{}", Thread.currentThread().getName());
@@ -31,19 +30,22 @@ public class StudentService {
 
     public Mono<StudentDTO.StudentResp> getStudent(String id) {
         return studentRepository.findById(id)
-                .flatMap(student -> Mono.just(StudentDTO.StudentResp.createStudentResp(student))
-        );
+                .map(StudentDTO.StudentResp::createStudentResp);
     }
 
     public Flux<StudentDTO.StudentResp> getAllStudent() {
-        return studentRepository.findAll().flatMap(
-                student -> Mono.just(StudentDTO.StudentResp.createStudentResp(student))
-        );
+        log.info("## start service :{}", Thread.currentThread().getName());
+
+        Flux<StudentDTO.StudentResp> resultFlux = studentRepository.findAll()
+                .map(StudentDTO.StudentResp::createStudentResp).log();
+
+        log.info("## end service :{}", Thread.currentThread().getName());
+        return resultFlux;
     }
 
-    public Mono<StudentDTO.StudentResp> updateStudent(Mono<StudentDTO.StudentReq> studentReq) {
-        return studentReq.flatMap(req -> studentRepository.findById(req.getId())
+    public Mono<StudentDTO.StudentResp> updateStudent(String id, Mono<StudentDTO.StudentReq> studentReq) {
+        return studentReq.flatMap(req -> studentRepository.findById(id)
                 .flatMap(student -> studentRepository.save(student.updateStudent(req)))
-                .flatMap(result -> Mono.just(StudentDTO.StudentResp.createStudentResp(result))));
+                .map(StudentDTO.StudentResp::createStudentResp));
     }
 }
