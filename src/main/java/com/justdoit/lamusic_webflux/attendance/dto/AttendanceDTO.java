@@ -16,7 +16,7 @@ public class AttendanceDTO {
     @Getter
     public static class AttendanceReq {
         private String attendanceDate; // YYYYMMDD
-        private AttendanceType attendanceType;
+        private List<AttendanceType> attendanceType;
         private String attendanceMemo;
         private String studentId;
     }

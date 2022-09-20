@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -22,8 +24,12 @@ public class AttendanceService {
     public Mono<AttendanceDTO.AttendanceResp> createAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
         log.info("## service start : {}", Thread.currentThread().getName());
 
+
         Mono<AttendanceDTO.AttendanceResp> result = attendanceReq.flatMap(
-                req -> attendanceRepository.insert(Attendance.createAttendance(req))
+                req -> attendanceRepository.insert(
+                        req.getAttendanceType().stream().map(attendanceType ->
+                                Attendance.createAttendance(req, attendanceType)).collect(Collectors.toList())
+                        )
                         .map(AttendanceDTO.AttendanceResp::createAttendanceResp)).log();
 
         log.info("## service end : {}", Thread.currentThread().getName());

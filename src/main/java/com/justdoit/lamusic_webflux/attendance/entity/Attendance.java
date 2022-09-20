@@ -10,6 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -30,10 +32,10 @@ public class Attendance {
 
     // TODO 입력 선생님, 수정 선생님
 
-    public static Attendance createAttendance(AttendanceDTO.AttendanceReq req) {
+    public static Attendance createAttendance(AttendanceDTO.AttendanceReq req, AttendanceType type) {
         return Attendance.builder()
                 .attendanceDate(req.getAttendanceDate())
-                .attendanceType(req.getAttendanceType())
+                .attendanceType(type)
                 .attendanceMemo(req.getAttendanceMemo())
                 .studentId(req.getStudentId())
                 .useYN(UseYN.Y)
