@@ -19,6 +19,17 @@ public class AttendanceDTO {
         private List<AttendanceType> attendanceType;
         private String attendanceMemo;
         private String studentId;
+        private List<String> deleteAttendance;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class AttendanceUpdateReq {
+        private String attendanceDate; // YYYYMMDD
+        private String attendanceMemo;
+        private String studentId;
+        private List<AttendanceType> attendanceType;
+        private List<String> deleteAttendance;
     }
 
     @AllArgsConstructor

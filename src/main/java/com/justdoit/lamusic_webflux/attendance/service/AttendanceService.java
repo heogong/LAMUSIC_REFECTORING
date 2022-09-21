@@ -23,62 +23,41 @@ public class AttendanceService {
 
     private final StudentService studentService;
 
-    public Mono<List<AttendanceDTO.AttendanceResp>> createAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
+    public Flux<AttendanceDTO.AttendanceResp> createAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
         log.info("## service start : {}", Thread.currentThread().getName());
 
-        Mono<List<AttendanceDTO.AttendanceResp>> result = attendanceReq.flatMap(
+        Flux<AttendanceDTO.AttendanceResp> result = attendanceReq.flatMap(
                 req -> Mono.just(req.getAttendanceType()).flatMap(
                         attendanceTypes -> attendanceRepository.insert(
                                 attendanceTypes.stream()
                                         .map(attendanceType -> Attendance.createAttendance(req, attendanceType))
                                         .collect(Collectors.toList())
                         ).map(AttendanceDTO.AttendanceResp::createAttendanceResp).collectList()
-                ));
+                )).flatMapMany(Flux::fromIterable);
 
         log.info("## service end : {}", Thread.currentThread().getName());
         return result;
     }
 
-    public Flux<Attendance> updateAttendance(Mono<AttendanceDTO.AttendanceUpdateReq> attendanceUpdateReq) {
+    public Flux<AttendanceDTO.AttendanceResp> updateAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
+
+        Flux<AttendanceDTO.AttendanceResp> newValidAttendance = attendanceReq.flatMap(
+                req -> Mono.just(req.getAttendanceType()).flatMap(
+                        attendanceTypes -> attendanceRepository.insert(
+                                attendanceTypes.stream()
+                                        .map(attendanceType -> Attendance.createAttendance(req, attendanceType))
+                                        .collect(Collectors.toList())
+                        ).map(AttendanceDTO.AttendanceResp::createAttendanceResp).collectList()
+                )).flatMapMany(Flux::fromIterable);
+
+        Flux<AttendanceDTO.AttendanceResp> unValidAttendance = attendanceReq.map(AttendanceDTO.AttendanceReq::getDeleteAttendance)
+                .flatMapMany(Flux::fromIterable)
+                .flatMap(attendanceRepository::findById)
+                .flatMap(attendance -> attendanceRepository.save(attendance.initAttendance()))
+                .map(AttendanceDTO.AttendanceResp::createAttendanceResp);
 
 
-        Mono<List<String>> deleteIdMonoList = attendanceUpdateReq.map(AttendanceDTO.AttendanceUpdateReq::getDeleteAttendance);
-
-
-
-
-        Flux<String> aa = deleteIdMonoList.flatMapMany(Flux::fromIterable);
-
-        Flux<Attendance> ab = aa.flatMap(attendanceRepository::findById);
-
-        Flux<Attendance> ac = ab.flatMap(x -> attendanceRepository.save(x.initAttendance()));
-
-
-
-
-//                .collectList()
-
-//        Mono<List<Mono<AttendanceDTO.AttendanceResp>>> aa = attendanceUpdateReq.map(
-//                req -> req.getDeleteAttendance().stream().map(
-//                        id -> attendanceRepository.findById(id)
-//                                .flatMap(attendance -> attendanceRepository.save(attendance.initAttendance()))
-//                                .map(AttendanceDTO.AttendanceResp::createAttendanceResp)
-//                        ).collect(Collectors.toList())
-//        );
-
-        return ac;
-
-
-//        attendanceUpdateReq.map(
-//                req -> req.getDeleteAttendance().stream()
-//                        .map(attendanceRepository::findById)
-//                        .flatMap(a -> a.)
-//        ))
-
-
-
-//                        .flatMap(attendance -> attendanceRepository.save(attendance.initAttendance()))
-//                        .map(AttendanceDTO.AttendanceResp::createAttendanceResp)
+        return newValidAttendance.mergeWith(unValidAttendance);
     }
 
     public Mono<AttendanceDTO.AttendanceStudentStatusResp> getAttendance(String toDate, String id) {

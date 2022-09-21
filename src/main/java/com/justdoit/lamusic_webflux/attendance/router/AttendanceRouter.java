@@ -29,9 +29,9 @@ public class AttendanceRouter {
     public RouterFunction<ServerResponse> attendanceRouterFunction () {
         return route()
                 .POST("/attendance", accept(APPLICATION_JSON), this::createAttendance)
-                .GET("/attendance/date/{toDate}/student/{id}", accept(APPLICATION_JSON), this::getAttendance)
-                .PATCH("/attendance/{id}", accept(APPLICATION_JSON), this::updateAttendance)
+                .PATCH("/attendance", accept(APPLICATION_JSON), this::updateAttendance)
                 .PUT("/attendance/{studentId}", accept(APPLICATION_JSON), this::initAttendance)
+                .GET("/attendance/date/{toDate}/student/{id}", accept(APPLICATION_JSON), this::getAttendance)
                 .build();
     }
 
@@ -55,10 +55,7 @@ public class AttendanceRouter {
 
     public Mono<ServerResponse> updateAttendance(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(attendanceService.updateAttendance(
-                        request.pathVariable("id"),
-                        request.bodyToMono(AttendanceDTO.AttendanceReq.class)
-                ), Attendance.class);
+                .body(attendanceService.updateAttendance(request.bodyToMono(AttendanceDTO.AttendanceReq.class)), Attendance.class);
     }
 
     public Mono<ServerResponse> initAttendance(ServerRequest request) {

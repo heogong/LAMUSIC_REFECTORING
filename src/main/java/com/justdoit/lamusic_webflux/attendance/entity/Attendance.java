@@ -3,15 +3,12 @@ package com.justdoit.lamusic_webflux.attendance.entity;
 import com.justdoit.lamusic_webflux.attendance.dto.AttendanceDTO;
 import com.justdoit.lamusic_webflux.common.AttendanceType;
 import com.justdoit.lamusic_webflux.common.UseYN;
-import com.justdoit.lamusic_webflux.student.entity.Student;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -32,10 +29,10 @@ public class Attendance {
 
     // TODO 입력 선생님, 수정 선생님
 
-    public static Attendance createAttendance(AttendanceDTO.AttendanceReq req, AttendanceType type) {
+    public static Attendance createAttendance(AttendanceDTO.AttendanceReq req, AttendanceType attendanceType) {
         return Attendance.builder()
                 .attendanceDate(req.getAttendanceDate())
-                .attendanceType(type)
+                .attendanceType(attendanceType)
                 .attendanceMemo(req.getAttendanceMemo())
                 .studentId(req.getStudentId())
                 .useYN(UseYN.Y)
@@ -44,10 +41,11 @@ public class Attendance {
                 .build();
     }
 
-    public Attendance updateAttendance(AttendanceDTO.AttendanceReq req) {
-        this.attendanceDate = req.getAttendanceDate();
-        this.attendanceType = req.getAttendanceType();
-        this.attendanceMemo = req.getAttendanceMemo();
+    public Attendance updateAttendance(String req) {
+//        this.attendanceDate = req.getAttendanceDate();
+//        this.attendanceType = req.getAttendanceType();
+//        this.attendanceMemo = req.getAttendanceMemo();
+//        this.useYN = req.getId() != null ? UseYN.N : UseYN.Y;
         this.updateDate = new Date();
 
         return this;
