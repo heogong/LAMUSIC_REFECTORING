@@ -1,8 +1,8 @@
 package com.justdoit.lamusic_webflux.student.entity;
 
-import com.justdoit.lamusic_webflux.common.ProcessClassType;
-import com.justdoit.lamusic_webflux.common.Status;
-import com.justdoit.lamusic_webflux.common.UseYN;
+import com.justdoit.lamusic_webflux.common.constant.ProcessClassType;
+import com.justdoit.lamusic_webflux.common.constant.RegistrationStatus;
+import com.justdoit.lamusic_webflux.common.constant.Valid;
 import com.justdoit.lamusic_webflux.student.dto.StudentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,8 +31,8 @@ public class Student {
     private String phone;
     private String address;
     private String description;
-    private Status status;
-    private UseYN useYn;
+    private RegistrationStatus status;
+    private Valid valid;
     private String job;
     private ProcessClassType processClassType; // 입학과정
 

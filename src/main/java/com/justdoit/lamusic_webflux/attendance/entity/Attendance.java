@@ -1,9 +1,8 @@
 package com.justdoit.lamusic_webflux.attendance.entity;
 
 import com.justdoit.lamusic_webflux.attendance.dto.AttendanceDTO;
-import com.justdoit.lamusic_webflux.common.AttendanceType;
-import com.justdoit.lamusic_webflux.common.UseYN;
-import lombok.AllArgsConstructor;
+import com.justdoit.lamusic_webflux.common.constant.AttendanceType;
+import com.justdoit.lamusic_webflux.common.constant.Valid;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -26,7 +25,7 @@ public class Attendance {
 
     private String studentId;
 
-    private UseYN useYN;
+    private Valid valid;
 
     // TODO 입력 선생님, 수정 선생님
 
@@ -36,14 +35,14 @@ public class Attendance {
                 .attendanceType(attendanceType)
                 .attendanceMemo(req.getAttendanceMemo())
                 .studentId(req.getStudentId())
-                .useYN(UseYN.Y)
+                .valid(Valid.Y)
                 .createDate(new Date())
                 .updateDate(new Date())
                 .build();
     }
 
-    public Attendance initAttendance() {
-        this.useYN = UseYN.N;
+    public Attendance unValidAttendance() {
+        this.valid = Valid.N;
         return this;
     }
 }

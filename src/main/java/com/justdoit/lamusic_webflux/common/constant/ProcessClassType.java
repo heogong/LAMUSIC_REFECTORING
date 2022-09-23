@@ -1,4 +1,4 @@
-package com.justdoit.lamusic_webflux.common;
+package com.justdoit.lamusic_webflux.common.constant;
 
 public enum ProcessClassType {
     HOBBY_CLASS, // 취미반

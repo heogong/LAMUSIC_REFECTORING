@@ -30,7 +30,7 @@ public class AttendanceRouter {
         return route()
                 .POST("/attendance", accept(APPLICATION_JSON), this::createAttendance)
                 .PATCH("/attendance", accept(APPLICATION_JSON), this::updateAttendance)
-                .PUT("/attendance/{studentId}", accept(APPLICATION_JSON), this::initAttendance)
+                .PUT("/attendance/{studentId}", accept(APPLICATION_JSON), this::unValidAttendance)
                 .GET("/attendance/date/{toDate}/student/{id}", accept(APPLICATION_JSON), this::getAttendance)
                 .build();
     }
@@ -58,8 +58,8 @@ public class AttendanceRouter {
                 .body(attendanceService.updateAttendance(request.bodyToMono(AttendanceDTO.AttendanceReq.class)), Attendance.class);
     }
 
-    public Mono<ServerResponse> initAttendance(ServerRequest request) {
+    public Mono<ServerResponse> unValidAttendance(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(attendanceService.initAttendance(request.pathVariable("studentId")), Attendance.class);
+                .body(attendanceService.unValidAttendance(request.pathVariable("studentId")), Attendance.class);
     }
 }

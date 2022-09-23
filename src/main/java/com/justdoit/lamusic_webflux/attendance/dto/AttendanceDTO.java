@@ -1,7 +1,7 @@
 package com.justdoit.lamusic_webflux.attendance.dto;
 
 import com.justdoit.lamusic_webflux.attendance.entity.Attendance;
-import com.justdoit.lamusic_webflux.common.AttendanceType;
+import com.justdoit.lamusic_webflux.common.constant.AttendanceType;
 import com.justdoit.lamusic_webflux.student.dto.StudentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
