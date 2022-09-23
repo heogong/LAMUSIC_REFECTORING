@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,40 +27,29 @@ public class AttendanceService {
     private final StudentService studentService;
 
     public Flux<AttendanceDTO.AttendanceResp> createAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
-        log.info("## service start : {}", Thread.currentThread().getName());
-
-        Flux<AttendanceDTO.AttendanceResp> result = attendanceReq.flatMap(
-                req -> Mono.just(req.getAttendanceType()).flatMap(
-                        attendanceTypes -> attendanceRepository.insert(
-                                attendanceTypes.stream()
-                                        .map(attendanceType -> Attendance.createAttendance(req, attendanceType))
-                                        .collect(Collectors.toList())
-                        ).map(AttendanceDTO.AttendanceResp::createAttendanceResp).collectList()
-                )).flatMapMany(Flux::fromIterable);
-
-        log.info("## service end : {}", Thread.currentThread().getName());
-        return result;
+        return attendanceReq.flatMap(
+                req -> Mono.just(req.getAttendanceType())
+                        .flatMapMany(Flux::fromIterable)
+                            .map(attendanceType -> Attendance.createAttendance(req, attendanceType))
+                            .flatMap(attendanceRepository::insert)
+                            .map(AttendanceDTO.AttendanceResp::createAttendanceResp).collectList()
+                ).flatMapMany(Flux::fromIterable);
     }
 
+    /**
+     * webflux 에서 1개의 body 요청은 subscribe 진행 후 데이터 소진으로 인해 기존 body 값을 유지하기 위한
+     * Cold subscribe 에서 Hot subscribe 으로 변경
+     *
+     * cache : 이 모노를 핫 소스로 바꾸고 추가 구독자를 위해 마지막으로 방출된 신호를 캐시합니다. 완료 및 오류도 재생됩니다.
+     */
     public Flux<AttendanceDTO.AttendanceResp> updateAttendance(Mono<AttendanceDTO.AttendanceReq> attendanceReq) {
-
-        Flux<AttendanceDTO.AttendanceResp> newValidAttendance = attendanceReq.flatMap(
-                req -> Mono.just(req.getAttendanceType()).flatMap(
-                        attendanceTypes -> attendanceRepository.insert(
-                                attendanceTypes.stream()
-                                        .map(attendanceType -> Attendance.createAttendance(req, attendanceType))
-                                        .collect(Collectors.toList())
-                        ).map(AttendanceDTO.AttendanceResp::createAttendanceResp).collectList()
-                )).flatMapMany(Flux::fromIterable);
-
-        Flux<AttendanceDTO.AttendanceResp> unValidAttendance = attendanceReq.map(AttendanceDTO.AttendanceReq::getDeleteAttendance)
+        Mono<AttendanceDTO.AttendanceReq> hotPubAttendanceReq = attendanceReq.cache();
+        Flux<AttendanceDTO.AttendanceResp> unValidAttendance = hotPubAttendanceReq.map(AttendanceDTO.AttendanceReq::getDeleteAttendance)
                 .flatMapMany(Flux::fromIterable)
                 .flatMap(attendanceRepository::findById)
                 .flatMap(attendance -> attendanceRepository.save(attendance.initAttendance()))
                 .map(AttendanceDTO.AttendanceResp::createAttendanceResp);
-
-
-        return newValidAttendance.mergeWith(unValidAttendance);
+        return this.createAttendance(hotPubAttendanceReq).mergeWith(unValidAttendance);
     }
 
     public Mono<AttendanceDTO.AttendanceStudentStatusResp> getAttendance(String toDate, String id) {

@@ -3,6 +3,7 @@ package com.justdoit.lamusic_webflux.attendance.entity;
 import com.justdoit.lamusic_webflux.attendance.dto.AttendanceDTO;
 import com.justdoit.lamusic_webflux.common.AttendanceType;
 import com.justdoit.lamusic_webflux.common.UseYN;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -39,16 +40,6 @@ public class Attendance {
                 .createDate(new Date())
                 .updateDate(new Date())
                 .build();
-    }
-
-    public Attendance updateAttendance(String req) {
-//        this.attendanceDate = req.getAttendanceDate();
-//        this.attendanceType = req.getAttendanceType();
-//        this.attendanceMemo = req.getAttendanceMemo();
-//        this.useYN = req.getId() != null ? UseYN.N : UseYN.Y;
-        this.updateDate = new Date();
-
-        return this;
     }
 
     public Attendance initAttendance() {
